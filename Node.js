@@ -4,7 +4,7 @@ class Node {
         this.wander_theta = random(TWO_PI);
         this.x = random(width);
         this.y = random(height);
-        this.size = 10;
+        this.size = 30;
         this.r = this.size * 4;
         this.id = id;
         this.neighbors = new Set();
@@ -13,10 +13,10 @@ class Node {
     }
 
     findNeighbors(nodes) {
-        for(let node of nodes) {
-            if(node != this) {
+        for (let node of nodes) {
+            if (node != this) {
                 let d = dist(this.x, this.y, node.x, node.y);
-                if(d < this.r){
+                if (d < this.r) {
                     this.neighbors.add(node);
                 } else {
                     this.neighbors.delete(node);
@@ -26,9 +26,9 @@ class Node {
     }
 
     transmitToNode(data) {
-        for(let neighbor of this.neighbors) {
-            for(let i = this.data.length - 1; i >= 0; i--) {
-                if(!this.data[i].prevID.has(neighbor.id)){
+        for (let neighbor of this.neighbors) {
+            for (let i = this.data.length - 1; i >= 0; i--) {
+                if (!this.data[i].prevID.has(neighbor.id)) {
                     this.data[i].prevID.add(neighbor.id);
                     this.data[i].time = Date.now();
                     neighbor.recieveFromNode(this.data[i]);
@@ -40,7 +40,7 @@ class Node {
 
     recieveFromNode(data) {
         this.recieveData.push(data);
-        if(data.recieverID == this.id) {
+        if (data.recieverID == this.id) {
             this.accepted(data.senderID, data.createdTime);
             this.recieveData.pop();
         } else {
@@ -48,13 +48,21 @@ class Node {
         }
     }
 
-    createData(dataForNode, id, prevID=new Set()) {
+    createData(dataForNode, id, prevID = new Set()) {
         randomSeed(id);
         let r = random(255);
         let g = random(255);
         let b = random(255);
         prevID.add(this.id);
-        let data = { color: color(r, g, b), data: dataForNode, senderID: this.id, recieverID: id, prevID: prevID, time: Date.now(), createdTime: Date.now()};
+        let data = {
+            color: color(r, g, b),
+            data: dataForNode,
+            senderID: this.id,
+            recieverID: id,
+            prevID: prevID,
+            time: Date.now(),
+            createdTime: Date.now()
+        };
         this.data.push(data);
         return data;
     }
@@ -70,20 +78,20 @@ class Node {
     }
 
     stayInsideCanvas() {
-        if (this.x > width-this.r/2) {
-            this.x = width-this.r/2;
-          } else if (this.x < this.r/2) {
-            this.x = this.r/2;
-          } else if (this.y > height-this.r/2) {
-            this.y = height-this.r/2;
-          } else if (this.y < this.r/2) {
-            this.y = this.r/2;
-          }
+        if (this.x > width - this.r / 2) {
+            this.x = width - this.r / 2;
+        } else if (this.x < this.r / 2) {
+            this.x = this.r / 2;
+        } else if (this.y > height - this.r / 2) {
+            this.y = height - this.r / 2;
+        } else if (this.y < this.r / 2) {
+            this.y = this.r / 2;
+        }
     }
 
     checkData() {
-        for(let item of this.data) {
-            if(Date.now() - item.time > 10000) {
+        for (let item of this.data) {
+            if (Date.now() - item.time > 10000) {
                 item.time = Date.now();
                 item.prevID.clear();
                 item.prevID.add(this.id);
@@ -96,12 +104,11 @@ class Node {
         let c = color(0, 255, 0);
         fill(c);
         ellipse(this.x, this.y, this.r);
-        background(c);
     }
 
     show() {
-        if(this.data.length > 0) {
-            for(let i = this.data.length-1; i >=0; i--) {
+        if (this.data.length > 0) {
+            for (let i = this.data.length - 1; i >= 0; i--) {
                 let c = this.data[i].color;
                 fill(c);
                 stroke(0);
@@ -109,7 +116,7 @@ class Node {
             }
         }
 
-        for(let neighbor of this.neighbors) {
+        for (let neighbor of this.neighbors) {
             line(this.x, this.y, neighbor.x, neighbor.y);
         }
 

@@ -1,4 +1,13 @@
+/**
+ * @author Andrew Solomon
+ * 
+ * Class for nodes that transfer and accepts data 
+ */
 class Node {
+    /**
+     * Node Constructor
+     * @param {number} id - ID of Node
+     */
     constructor(id) {
         this.max_wander_offset = 0.3;
         this.wander_theta = random(TWO_PI);
@@ -12,6 +21,10 @@ class Node {
         this.recieveData = [];
     }
 
+    /**
+     * Method to determine which nodes 
+     * @param {Node[]} nodes - List of all nodes
+     */
     findNeighbors(nodes) {
         for (let node of nodes) {
             if (node != this) {
@@ -26,6 +39,10 @@ class Node {
         }
     }
 
+    /**
+     * Method to transmit message, if any, to connected neighbors.
+     * 
+     */
     transmitDataToNeighbors() {
         for (let neighbor of this.neighbors) {
             for (let i = this.data.length - 1; i >= 0; i--) {
@@ -39,6 +56,11 @@ class Node {
         }
     }
 
+    /**
+     * Method to accept message from connected neighbors.
+     * 
+     * @param {object} data - Message received from node
+     */
     recieveFromNode(data) {
         this.recieveData.push(data);
         if (data.recieverID == this.id) {
@@ -49,6 +71,13 @@ class Node {
         }
     }
 
+    /**
+     * Method to create a message for a node 
+     * 
+     * @param {string} dataForNode - Message for end node
+     * @param {number} id - ID message is going to
+     * @param {Set} prevID - Set of ID's that touched this message
+     */
     createData(dataForNode, id, prevID = new Set()) {
         randomSeed(id);
         let r = random(255);
@@ -68,6 +97,10 @@ class Node {
         return data;
     }
 
+    /**
+     * Moving function for nodes
+     * 
+     */
     move() {
         randomSeed();
         let wander_offset = random(-this.max_wander_offset, this.max_wander_offset);
@@ -78,6 +111,10 @@ class Node {
         this.stayInsideCanvas();
     }
 
+    /**
+     * Keep nodes within canvas
+     * 
+     */
     stayInsideCanvas() {
         if (this.x > width - this.r / 2) {
             this.x = width - this.r / 2;
@@ -90,6 +127,10 @@ class Node {
         }
     }
 
+    /**
+     * Method to check if data its holding has been held for too long. 
+     * Clears previous ID's and resets its time.
+     */
     checkData() {
         for (let item of this.data) {
             if (Date.now() - item.time > 10000) {
@@ -100,6 +141,12 @@ class Node {
         }
     }
 
+    /**
+     * Method to notify that Node has accepted a message for it
+     * 
+     * @param {number} senderID 
+     * @param {Date} createdTime 
+     */
     accepted(senderID, createdTime) {
         console.log(this.id + " accepted from " + senderID + " and took " + (Date.now() - createdTime) / 1000 + "s");
         let c = color(0, 255, 0);
@@ -107,6 +154,10 @@ class Node {
         ellipse(this.x, this.y, this.r);
     }
 
+    /**
+     * Method to display nodes
+     * 
+     */
     show() {
         if (this.data.length > 0) {
             for (let i = this.data.length - 1; i >= 0; i--) {

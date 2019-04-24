@@ -17,7 +17,8 @@ class Node {
             if (node != this) {
                 let d = dist(this.x, this.y, node.x, node.y);
                 if (d < this.r) {
-                    this.neighbors.add(node);
+                    if (this.neighbors.size < 7)
+                        this.neighbors.add(node);
                 } else {
                     this.neighbors.delete(node);
                 }
@@ -25,7 +26,7 @@ class Node {
         }
     }
 
-    transmitToNode(data) {
+    transmitDataToNeighbors() {
         for (let neighbor of this.neighbors) {
             for (let i = this.data.length - 1; i >= 0; i--) {
                 if (!this.data[i].prevID.has(neighbor.id)) {

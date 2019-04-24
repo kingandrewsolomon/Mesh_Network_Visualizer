@@ -19,7 +19,7 @@ function draw() {
     for (let node of nodes) {
         node.findNeighbors(nodes);
         if (node.neighbors.size > 0 && node.data.length > 0) {
-            node.transmitToNode(node.data);
+            node.transmitDataToNeighbors();
             node.checkData();
         }
 

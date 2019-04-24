@@ -6,7 +6,6 @@ let c = 0;
 
 function setup() {
     createCanvas(cWidth, cHeight);
-    // createCanvas(300, 300);
     for (let i = 0; i < 70; i++) {
         nodes.push(new Node(i));
     }
@@ -27,6 +26,7 @@ function draw() {
         node.move();
     }
 
+    /* to create a data every some amount of seconds */
     // let it = Date.now();
     // if (it % 100 == 0) {
     //     console.log(it);
@@ -38,6 +38,7 @@ function mousePressed() {
     createData();
 }
 
+/* function to create random data */
 function createData() {
     let recieverID = floor(random(nodes.length));
     let senderID = floor(random(nodes.length));
